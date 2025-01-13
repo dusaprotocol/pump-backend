@@ -1,4 +1,4 @@
-# Dusa backend
+# Duser Pump backend
 
 ## Fill environment variables
 

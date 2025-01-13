@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  address            String     @unique
+  referralCode       String?    @unique
+  discordId          String?    @unique
+  username           String?    @unique
+  bio                String?
+  profileImageURI    String?
+  lastUsernameChange DateTime?
+  swapTxs            Swap[]
+  referred           Referral[]
+  comments           Comment[]
+  tokens             Token[]
+}
+
+model Referral {
+  userAddress      String   @unique
+  godfatherAddress String
+  createdAt        DateTime @default(now())
+  godfather        User     @relation(fields: [godfatherAddress], references: [address])
+}
+
+model Pool {
+  address      String      @id
+  tokenAddress String
+  whitelisted  Boolean     @default(false)
+  token        Token       @relation("pool", fields: [tokenAddress], references: [address], onDelete: Cascade)
+  analytics    Analytics[]
+  swapTxs      Swap[]
+}
+
+model Token {
+  address         String    @id
+  name            String
+  symbol          String
+  decimals        Int
+  description     String?
+  twitter         String?
+  telegram        String?
+  createdBy       String
+  imageURI        String?
+  website         String?
+  completed       Boolean   @default(false)
+  completedAt     DateTime?
+  nsfw            Boolean   @default(false)
+  dusaPoolAddress String?
+  createdAt       DateTime  @default(now())
+  dev             User      @relation(fields: [createdBy], references: [address])
+  comments        Comment[]
+  pools           Pool[]    @relation("pool")
+}
+
+model Comment {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  message      String
+  userAddress  String
+  tokenAddress String
+  user         User     @relation(fields: [userAddress], references: [address])
+  token        Token    @relation(fields: [tokenAddress], references: [address])
+}
+
+model Swap {
+  swapForY       Boolean
+  amountIn       String
+  amountOut      String
+  timestamp      DateTime
+  txHash         String
+  usdValue       Float
+  userAddress    String
+  indexInSlot    Int
+  feesIn         String
+  feesUsdValue   Float
+  poolAddress    String
+  executionPrice Float
+  afterPrice     Float
+  afterReserve0  String
+  afterReserve1  String
+  user           User     @relation(fields: [userAddress], references: [address])
+  pool           Pool     @relation(fields: [poolAddress], references: [address])
+
+  @@id([txHash, indexInSlot])
+  @@index([timestamp, poolAddress], map: "timestampSwap")
+}
+
+model Analytics {
+  date        DateTime
+  volume      Int
+  fees        Float
+  close       Float
+  high        Float
+  low         Float
+  open        Float
+  poolAddress String
+  volume0     String
+  volume1     String
+  pool        Pool     @relation(fields: [poolAddress], references: [address])
+
+  @@id([poolAddress, date])
+  @@index([date], map: "date")
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  message   Bytes
+  data      Bytes
+}

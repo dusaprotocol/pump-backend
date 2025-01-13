@@ -1,0 +1,43 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "prisma db pull && prisma generate && pnpm install:api && pnpm install:indexer",
+    "install:api": "cd api && pnpm i",
+    "install:indexer": "cd indexer && pnpm i",
+    "start:api": "cd api && pnpm start",
+    "start:indexer": "cd indexer && pnpm start",
+    "test": "vitest --no-threads",
+    "reward": "tsx ./api/src/rewards.ts",
+    "reset": "prisma migrate reset --force && prisma db push",
+    "prettier": "prettier assembly//**/*.ts --check && as-prettier --check assembly",
+    "prettier:fix": "prettier assembly//**/*.ts --write && as-prettier --write assembly",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "mainnet": "cp .env.mainnet .env && npx prisma generate",
+    "buildnet": "cp .env.buildnet .env && npx prisma generate",
+    "local": "cp .env.local .env && npx prisma generate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@dusalabs/sdk": "^0.7.1",
+    "@massalabs/massa-web3": "4.0.3",
+    "@prisma/client": "^5.19.1",
+    "dotenv": "^16.4.1",
+    "tsx": "^4.7.0",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "eslint": "9.x",
+    "globals": "^15.2.0",
+    "prisma": "^5.19.1",
+    "tslib": "^2.6.2",
+    "typescript": "^4.9.5",
+    "typescript-eslint": "^7.9.0",
+    "vitest": "^0.34.6"
+  }
+}

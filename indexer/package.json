@@ -1,0 +1,24 @@
+{
+  "name": "indexer",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx main.ts",
+    "dev": "tsx watch main.ts",
+    "postinstall": "buf generate"
+  },
+  "dependencies": {
+    "@bufbuild/buf": "1.26.1",
+    "@grpc/grpc-js": "^1.9.2",
+    "@protobuf-ts/grpc-transport": "^2.9.1",
+    "@protobuf-ts/plugin": "^2.9.1",
+    "@protobuf-ts/runtime": "^2.9.1",
+    "@protobuf-ts/runtime-rpc": "^2.9.1",
+    "massa-proto": "github:massalabs/massa-proto#TEST.26"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
